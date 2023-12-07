@@ -1,0 +1,48 @@
+service: serverless-api-boilerplate
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  timeout: 300
+  stage: prod
+  region: ap-southeast-1
+  environment:
+plugins:
+  - serverless-aws-alias-v3
+  - serverless-offline
+
+package:
+  exclude:
+    - webpack.config.js
+    - node_modules/**
+    - src/**
+    - .babelrc
+    - package.json
+    - .husky/**
+    - ecr/**
+    - .eslintrc.js
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    websocketPort: 4001
+    lambdaPort: 4002
+
+functions:
+  health:
+    handler: dist/handler.health
+    events:
+      - http:
+          path: health
+          method: GET
+          cors: true
+    timeout: 30
+  sample:
+    handler: dist/handler.sample
+    events:
+      - http:
+          path: sample
+          method: GET
+          cors: true
+    timeout: 30
+  
